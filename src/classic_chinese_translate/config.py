@@ -27,7 +27,7 @@ class Config:
 
     def __post_init__(self):
         if not self.dictionaries:
-            dict_dir = self.data_dir / "dictionaries"
+            dict_dir = self.data_dir / "dataset" / "dictionary"
             self.dictionaries = [
                 dict_dir / "dict.txt",
                 dict_dir / "中国历史地名词典.txt",
@@ -35,9 +35,9 @@ class Config:
                 dict_dir / "成语（5W）.txt",
             ]
         if not self.models:
-            d = self.data_dir
-            models_dir = d / "models"
-            bpe_dir = d / "bpe"
+            d = self.data_dir / "dataset"
+            models_dir = self.data_dir / "model"
+            bpe_dir = d / "bpe_file"
             self.models = {
                 "old2new": ModelConfig(
                     "old2new",

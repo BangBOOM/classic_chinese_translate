@@ -9,13 +9,47 @@ Standalone classical Chinese translation engine using fairseq transformer models
 - Python 3.9, managed with **uv**
 - torch 1.13.1, numpy < 1.24
 - Custom fairseq 0.6.2 (vendored at `vendored/fairseq/`)
-- All model/data files are symlinked from `/Users/bangboom/Documents/WebTrans/webfortrans/myfiles/`
+- Model/data files from HuggingFace (see Data Setup below)
+
+## Data Setup
+
+Before running the project, download model and data files from HuggingFace to the local `data/` folder:
+
+```bash
+# Install huggingface-hub if not already available
+uv pip install huggingface-hub
+
+# Download dataset (BPE codes, training data, dictionaries)
+hf download bangboom/chinese-translation-data --local-dir data/dataset
+
+# Download models (~5.2GB)
+hf download bangboom/chinese-translation-models --local-dir data/model
+```
+
+### data/ folder structure
+
+```
+data/
+├── dataset/                 # bangboom/chinese-translation-data
+│   ├── bpe_file/            # BPE codes (old.bpe, new.bpe, addpunc.bpe, shici.bpe)
+│   ├── dataflow_old2new/    # Binarized training data for old→new
+│   ├── dataflow_new2old/    # Binarized training data for new→old
+│   ├── dataflow_addpunc/    # Binarized training data for punctuation
+│   ├── dataflow_shici/      # Binarized training data for poetry
+│   └── dictionary/          # Lookup dictionaries
+└── model/                   # bangboom/chinese-translation-models
+    ├── model_old2new.pt
+    ├── model_new2old.pt
+    ├── model_addpunc.pt
+    └── model_shici.pt
+```
 
 ## Dependencies
 
 ```bash
 uv sync
 uv pip install -e ./vendored/fairseq
+uv pip install huggingface-hub
 ```
 
 ## Usage
@@ -45,7 +79,9 @@ src/classic_chinese_translate/
 └── config.py      # Path management for models/data/dictionaries
 
 vendored/fairseq/  # Custom fairseq 0.6.2 fork
-data/              # Symlinks to model files (~5.2GB), BPE codes, dictionaries
+data/
+├── dataset/        # BPE codes, training data, dictionaries (from HuggingFace)
+└── model/          # fairseq .pt model files (from HuggingFace)
 ```
 
 ## Translation Pipeline
